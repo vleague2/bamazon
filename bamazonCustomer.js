@@ -2,6 +2,7 @@
 const mysql = require('mysql');
 const inquirer = require('inquirer');
 const table = require('console.table');
+const chalk = require('chalk');
 
 // set up items connection to database
 const connection = mysql.createConnection({
@@ -15,7 +16,7 @@ const connection = mysql.createConnection({
 // connect to database and start the program
 connection.connect((err) => {
     if (err) throw err;
-    console.log("Connected as " + connection.threadId);
+    console.log("\nWelcome to Bamazon!");
 
     // call the function to start the program
     readDB();
@@ -45,6 +46,7 @@ function readDB() {
             }
 
             // display a table containing the array items
+            console.log("\n")
             console.table(tableVal);
 
             // call the next function to ask the user what they want to purchase, and pass in tableVal so we can use it there
@@ -94,15 +96,35 @@ function userAction(tableVal) {
         if (answers.quantity > item.quantity) {
 
             // log that the quantity is insufficient, and re-call the function to restart the questions
-            console.log("Insufficient quantity!\n\n");
+            console.log(chalk.red("\nInsufficient quantity!\n"));
             userAction(tableVal);
         }
 
-        // console.log (item);
-
-        // if (answers.quantity) {
-            
-        // }
-        // console.log(answers);
+        else {
+            console.log(chalk.bgGreen("\n\nYou have purchased " + answers.quantity + " " + item.product + "s!\n"));
+            updateDB(answers.quantity, item);
+        }
     })
+}
+
+
+function updateDB(quantity, item) {
+
+    let newQuant = item.quantity - quantity;
+
+    connection.query(
+        "UPDATE products SET ? WHERE ?",
+        [
+            {
+                stock_quantity: newQuant
+            },
+            {
+                id: item.item
+            }
+        ],
+        function(err, res) {
+            if (err) throw err;
+            readDB();
+        }
+    )
 }

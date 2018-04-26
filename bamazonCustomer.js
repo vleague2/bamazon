@@ -101,7 +101,7 @@ function userAction(tableVal) {
         }
 
         else {
-            console.log(chalk.bgGreen("\n\nYou have purchased " + answers.quantity + " " + item.product + "s!\n"));
+            console.log(chalk.bgGreen("\n\nYou have purchased " + answers.quantity + " " + item.product + "s!\nThe total cost was: $" + answers.quantity * item.price));
             updateDB(answers.quantity, item);
         }
     })

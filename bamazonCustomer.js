@@ -4,7 +4,7 @@ const inquirer = require('inquirer');
 const table = require('console.table');
 const chalk = require('chalk');
 
-
+// Constructor to allow us to make product objects quickly
 let Product = function(id, name, dept, price, quant) {
     this.Item = id;
     this.Product = name;
@@ -12,7 +12,6 @@ let Product = function(id, name, dept, price, quant) {
     this.Price = price;
     this.Quantity = quant;
 }
-
 
 // set up items connection to database
 const connection = mysql.createConnection({
@@ -44,6 +43,8 @@ function readDB() {
 
             // loop through database response and push each value to the array
             for (i=0; i < res.length; i++) {
+
+                // use the constructor to create an object
                 let itemObject = new Product(res[i].id, res[i].product_name, res[i].department_name, res[i].price, res[i].stock_quantity);
                 
                 productsArray.push(itemObject);
@@ -111,13 +112,17 @@ function userAction(productsArray) {
     })
 }
 
-
+// function to update the database
 function updateDB(quantity, userItem) {
 
+    // calculate the new quantity for the item
     let newQuant = userItem.Quantity - quantity;
 
+    // query the database to update
     connection.query(
         "UPDATE products SET ? WHERE ?",
+
+        // use the item's ID as the identifier, and plug in the new quantity
         [
             {
                 stock_quantity: newQuant
@@ -126,6 +131,8 @@ function updateDB(quantity, userItem) {
                 id: userItem.Item
             }
         ],
+
+        // call the read DB function to restart the whole program
         function(err, res) {
             if (err) throw err;
             readDB();

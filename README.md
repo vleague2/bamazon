@@ -27,13 +27,13 @@ Add New Product | The app will prompt the user to enter the information needed t
 
 See gifs below for functionality.
 
-![Alt Text](url)
+![Manager View](/images/managerview1.gif)
 
-![Alt Text](url)
+![Manager View](/images/managerview2.gif)
 
-![Alt Text](url)
+![Manager View](/images/managerview3.gif)
 
-![Alt Text](url)
+![Manager View](images/managerview4.gif)
 
 
 ## Technologies used:

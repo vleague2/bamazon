@@ -4,15 +4,6 @@ const inquirer = require('inquirer');
 const table = require('console.table');
 const chalk = require('chalk');
 
-// Constructor to allow us to make product objects quickly
-let Product = function(id, name, dept, price, quant) {
-    this.Item = id;
-    this.Product = name;
-    this.Department = dept;
-    this.Price = price;
-    this.Quantity = quant;
-}
-
 // set up items connection to database
 const connection = mysql.createConnection({
     host: "localhost",

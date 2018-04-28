@@ -13,7 +13,7 @@ As a customer, the user will see a table of the items available.
 
 See gif below for functionality.
 
-![CustomerView](/images/customer.gif)
+![CustomerView](/images/customer1.gif)
 
 ## Manager View
 As a manager, the user will be able to select one of four commands:

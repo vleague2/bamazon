@@ -168,5 +168,53 @@ function addInventory(res) {
 }
 
 function newProduct() {
-
+    inquirer.prompt([
+        {
+            type: "input",
+            message: "What is the name of the product you want to add?",
+            name: "name"
+        },
+        {
+           type: "input",
+           message: "What department is this item in?",
+           name: "dept" 
+        },
+        {
+            type: "input",
+            message: "What is the price of the item?",
+            name: "price",
+            validate: function(value) {
+                if (isNaN(value) === false) {
+                  return true;
+                }
+                return false;
+            }
+        },
+        {
+            type: "input",
+            message: "How many of this item do we have in stock?",
+            name: "stock",
+            validate: function(value) {
+                if (isNaN(value) === false) {
+                  return true;
+                }
+                return false;
+            }
+        }
+    ]).then(answers => {
+        connection.query(
+            "INSERT INTO products SET ?",
+            {
+                product_name: answers.name,
+                department_name: answers.dept,
+                price: answers.price,
+                stock_quantity: answers.stock
+            },
+            function(err) {
+                if (err) throw err;
+                console.log(chalk.bgGreen("\n\n   Your item has been added successfully!     \n"));
+                start();
+            }
+        )
+    })
 }

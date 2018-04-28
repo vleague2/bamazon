@@ -38,30 +38,18 @@ function readDB() {
         "SELECT * FROM products", (err, res) => {
             if (err) throw err;
     
-            // set up empty array that will hold each value from the database response
-            let productsArray = [];
-
-            // loop through database response and push each value to the array
-            for (i=0; i < res.length; i++) {
-
-                // use the constructor to create an object
-                let itemObject = new Product(res[i].id, res[i].product_name, res[i].department_name, res[i].price, res[i].stock_quantity);
-                
-                productsArray.push(itemObject);
-            }
-
             // display a table containing the array items
             console.log("\n")
-            console.table(productsArray);
+            console.table(res);
 
             // call the next function to ask the user what they want to purchase, and pass in productsArray so we can use it there
-            userAction(productsArray);
+            userAction(res);
         }
     )
 }
 
 // function to ask the user what action they'd like to take
-function userAction(productsArray) {
+function userAction(res) {
     inquirer.prompt([
         {
             type: "input",
@@ -70,7 +58,7 @@ function userAction(productsArray) {
 
             // make sure the item ID is one of the available options
             validate: function(input) {
-                if (input > productsArray.length) {
+                if (input > res.length) {
                     return false;
                 }
 
@@ -87,26 +75,21 @@ function userAction(productsArray) {
     ])
     .then(answers => {
 
-        // set up a variable that we will adjust to contain the item the user has chosen
-        let userItem = "";
+        let itemIndex = parseInt(answers.item) - 1;
 
-        // loop through productsArray array and check if the user's choice matches that item's ID. if so, reassign the variable above
-        productsArray.forEach(product => {
-            if (answers.item == product.Item) {
-                userItem = product;
-            }
-        });
+        // set up a variable that we will adjust to contain the item the user has chosen
+        let userItem = res[itemIndex];
 
         // if the quantity the user has specified is more than the quantity available
-        if (answers.quantity > userItem.Quantity) {
+        if (answers.quantity > userItem.stock_quantity) {
 
             // log that the quantity is insufficient, and re-call the function to restart the questions
             console.log(chalk.red("\nInsufficient quantity!\n"));
-            userAction(productsArray);
+            userAction(res);
         }
 
         else {
-            console.log(chalk.bgGreen("\n\n   You have purchased " + answers.quantity + " " + userItem.Product + "s!   \n   The total cost was: $" + answers.quantity * userItem.Price + "   "));
+            console.log(chalk.bgGreen("\n\n   You have purchased " + answers.quantity + " " + userItem.product_name + "s!   \n   The total cost was: $" + answers.quantity * userItem.price + "   "));
             updateDB(answers.quantity, userItem);
         }
     })
@@ -116,7 +99,7 @@ function userAction(productsArray) {
 function updateDB(quantity, userItem) {
 
     // calculate the new quantity for the item
-    let newQuant = userItem.Quantity - quantity;
+    let newQuant = userItem.stock_quantity - quantity;
 
     // query the database to update
     connection.query(
@@ -128,7 +111,7 @@ function updateDB(quantity, userItem) {
                 stock_quantity: newQuant
             },
             {
-                id: userItem.Item
+                id: userItem.id
             }
         ],
 

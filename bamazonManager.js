@@ -15,18 +15,17 @@ const connection = mysql.createConnection({
 // connect to database and start the program
 connection.connect((err) => {
     if (err) throw err;
-    console.log("\nWelcome to Bamazon!");
+    console.log("\nWelcome to Bamazon!\n");
 
     // call the function to start the program
     start();
-
 })
 
 function start() {
     inquirer.prompt([
         {
             type: "list",
-            name: "What would you like to do?",
+            message: "What would you like to do?",
             choices: ["View Products for Sale", "View Low Inventory", "Add to Inventory", "Add New Product"],
             name: "action"
         }
@@ -51,11 +50,23 @@ function start() {
 }
 
 function viewProducts() {
-
+    connection.query(
+        "SELECT * FROM products", (err, res) => {
+            if (err) throw err;
+            console.table(res);
+            start();
+        }
+    )
 }
 
 function lowInventory() {
-
+    connection.query(
+        "SELECT * FROM products WHERE stock_quantity < 5", (err, res) => {
+            if (err) throw err;
+            console.table(res);
+            start();
+        }
+    )
 }
 
 function addInventory() {
@@ -63,5 +74,5 @@ function addInventory() {
 }
 
 function newProduct() {
-    
+
 }

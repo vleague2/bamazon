@@ -49,7 +49,7 @@ function userAction(res) {
 
             // make sure the item ID is one of the available options
             validate: function(input) {
-                if (input > res.length) {
+                if (input > res.length || isNaN(input) === true) {
                     return false;
                 }
 
@@ -61,14 +61,21 @@ function userAction(res) {
         {
             type: "input",
             message: "How many would you like to purchase?",
-            name: "quantity"
+            name: "quantity",
+            validate: function(value) {
+                if (isNaN(value) === false) {
+                  return true;
+                }
+                return false;
+            }
         }
     ])
     .then(answers => {
 
-        let itemIndex = parseInt(answers.item) - 1;
+        // take the item number they chose and subtract one so that we can use it as an array index number
+        let itemIndex = answers.item - 1;
 
-        // set up a variable that we will adjust to contain the item the user has chosen
+        // assign the array entry to a variable so we can access it
         let userItem = res[itemIndex];
 
         // if the quantity the user has specified is more than the quantity available

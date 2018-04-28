@@ -13,7 +13,7 @@ As a customer, the user will see a table of the items available.
 
 See gif below for functionality.
 
-![CustomerView](https://gfycat.com/JoyousFrayedEquestrian)
+![CustomerView](/images/JoyousFrayedEquestrian.webm)
 
 ## Manager View
 As a manager, the user will be able to select one of four commands:

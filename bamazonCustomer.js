@@ -87,7 +87,11 @@ function userAction(res) {
         }
 
         else {
+
+            // log what the user purchased and how much it cost
             console.log(chalk.bgGreen("\n\n   You have purchased " + answers.quantity + " " + userItem.product_name + "s!   \n   The total cost was: $" + answers.quantity * userItem.price + "   "));
+
+            // call the updateDB function and pass in the item and quantity
             updateDB(answers.quantity, userItem);
         }
     })

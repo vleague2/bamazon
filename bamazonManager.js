@@ -16,12 +16,16 @@ const connection = mysql.createConnection({
 // connect to database and start the program
 connection.connect((err) => {
     if (err) throw err;
+
+    // welcome the user!
     console.log("\nWelcome to Bamazon!\n");
     
     // start the program
     start();
 })
 
+
+// function that starts the program
 function start() {
 
     // query database for an updated list of all products
@@ -40,10 +44,8 @@ function start() {
             ])
             .then(answers => {
 
-                let action = answers.action;
-
                 // based on what they choose, select a function and pass in the response from the database if needed
-                switch (action) {
+                switch (answers.action) {
                     case "View Products for Sale": 
                         viewProducts(res);
                         break;
@@ -104,7 +106,7 @@ function addInventory(res) {
             message: "Which item would you like to replenish?",
             name: "item",
 
-            // make sure the item ID is one of the available options
+            // make sure the item ID is one of the available options & they enter a number
             validate: function(input) {
                 if (input > res.length || isNaN(input) === true) {
                     return false;
@@ -119,6 +121,8 @@ function addInventory(res) {
             type: "input",
             message: "How much inventory would you like to add?",
             name: "amount",
+
+            // make sure they enter a number
             validate: function(value) {
                 if (isNaN(value) === false) {
                   return true;
@@ -135,7 +139,7 @@ function addInventory(res) {
         // assign the array entry to a variable so we can access it
         let userItem = res[itemIndex];
 
-        // take the amount they entered and assign it to a variable
+        // take the amount they entered and parse it to a variable so we can add to it
         let amount = parseInt(answers.amount);
 
         // calculate the new quantity after the restock 
@@ -161,13 +165,17 @@ function addInventory(res) {
                 // let the user know how much they've restocked
                 console.log(chalk.bgGreen("\n\n   You have added " + amount + " to " + userItem.product_name + "     \n"));
 
+                // restart the program
                 start();
             }
         )
     })
 }
 
+// function to add a new product
 function newProduct() {
+
+    // gather the info we need to plug into the database
     inquirer.prompt([
         {
             type: "input",
@@ -183,6 +191,8 @@ function newProduct() {
             type: "input",
             message: "What is the price of the item?",
             name: "price",
+
+            // make sure they enter a number
             validate: function(value) {
                 if (isNaN(value) === false) {
                   return true;
@@ -194,6 +204,8 @@ function newProduct() {
             type: "input",
             message: "How many of this item do we have in stock?",
             name: "stock",
+            
+            // make sure they enter a number
             validate: function(value) {
                 if (isNaN(value) === false) {
                   return true;
@@ -202,8 +214,12 @@ function newProduct() {
             }
         }
     ]).then(answers => {
+
+        // query the database to add a new item
         connection.query(
             "INSERT INTO products SET ?",
+
+            // plug in the info we got from the inquirer
             {
                 product_name: answers.name,
                 department_name: answers.dept,
@@ -212,7 +228,11 @@ function newProduct() {
             },
             function(err) {
                 if (err) throw err;
+                
+                // log that the item was added
                 console.log(chalk.bgGreen("\n\n   Your item has been added successfully!     \n"));
+                
+                // restart the program
                 start();
             }
         )

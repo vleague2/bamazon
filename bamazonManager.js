@@ -18,7 +18,7 @@ connection.connect((err) => {
     if (err) throw err;
 
     // welcome the user!
-    console.log("\nWelcome to Bamazon!\n");
+    console.log("\nWelcome to Bamazon! You are entering as a manager.\n");
     
     // start the program
     start();

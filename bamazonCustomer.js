@@ -16,7 +16,7 @@ const connection = mysql.createConnection({
 // connect to database and start the program
 connection.connect((err) => {
     if (err) throw err;
-    console.log("\nWelcome to Bamazon!");
+    console.log("\nWelcome to Bamazon! You are entering as a customer.");
 
     // call the function to start the program
     readDB();

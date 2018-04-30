@@ -26,15 +26,21 @@ connection.connect((err) => {
 // read the database's current entries
 function readDB() {
     connection.query(
-        "SELECT * FROM products", (err, res) => {
+        // in this query, calling only the product fields I want the user to see
+        "SELECT id, product_name, department_name, price, stock_quantity FROM products", (err, res) => {
             if (err) throw err;
     
             // display a table containing the array items
             console.log("\n")
             console.table(res);
 
-            // call the next function to ask the user what they want to purchase, and pass in productsArray so we can use it there
-            userAction(res);
+            // calling another query so that we have all the product fields, which we will need later!
+            connection.query(
+                "SELECT * FROM products", (err, res2) => {
+                    // call the next function to ask the user what they want to purchase, and pass in the database response so we can use it there
+                    userAction(res2);
+                }
+            )    
         }
     )
 }
@@ -88,20 +94,25 @@ function userAction(res) {
 
         else {
 
+            let price = answers.quantity * userItem.price;
+
             // log what the user purchased and how much it cost
-            console.log(chalk.bgGreen("\n\n   You have purchased " + answers.quantity + " " + userItem.product_name + "s!   \n   The total cost was: $" + answers.quantity * userItem.price + "   "));
+            console.log(chalk.bgGreen("\n\n   You have purchased " + answers.quantity + " " + userItem.product_name + "s!   \n   The total cost was: $" + price + "   "));
 
             // call the updateDB function and pass in the item and quantity
-            updateDB(answers.quantity, userItem);
+            updateDB(answers.quantity, userItem, price);
         }
     })
 }
 
 // function to update the database
-function updateDB(quantity, userItem) {
+function updateDB(quantity, userItem, price) {
 
     // calculate the new quantity for the item
     let newQuant = userItem.stock_quantity - quantity;
+
+    // calculate the new total sales for that product
+    let newSales = userItem.product_sales + price;
 
     // query the database to update
     connection.query(
@@ -110,7 +121,8 @@ function updateDB(quantity, userItem) {
         // use the item's ID as the identifier, and plug in the new quantity
         [
             {
-                stock_quantity: newQuant
+                stock_quantity: newQuant,
+                product_sales: newSales
             },
             {
                 id: userItem.id

@@ -1,6 +1,6 @@
 # Bamazon
 
-This app contains two different levels of functionality. Bamazon is a database of products that customers can purchase.
+This app contains three different levels of functionality. Bamazon is a database of products that customers can purchase.
 
 ## Customer View
 As a customer, the user will see a table of the items available.
@@ -33,8 +33,21 @@ See gifs below for functionality.
 
 ![Manager View](/images/managerview3.gif)
 
-![Manager View](images/managerview4.gif)
+![Manager View](/images/managerview4.gif)
 
+## Supervisor View
+As a supervisor, the user will be able to select one of two commands:
+
+Command | Result
+------------ | -------------
+View product sales by department | The app will perform a join on two tables in the Bamazon database to display department information combined with product sale information. The program then restarts.
+Add a new department | The app will prompt the user to enter the information needed to create a new department. It will add the new department to the database, but please note that the new department will not have any product sales yet, and thus no profit. The program then restarts.
+
+See gifs below for functionality.
+
+![Supervisor View](/images/supervisorview1.gif)
+
+![Supervisor View](/images/supervisorview2.gif)
 
 ## Technologies used:
 * Node.js

@@ -1,6 +1,11 @@
 # Bamazon
 
-This app contains three different levels of functionality. Bamazon is a database of products that customers can purchase.
+Bamazon is a database of products that customers can purchase. This app contains three different levels of functionality. 
+
+## How to Use
+* You must have NodeJS installed.
+* Clone down the repo.
+* Use the "node" command to run the file of your choice. The gifs below demonstrate how to run the command line.
 
 ## Customer View
 As a customer, the user will see a table of the items available.
